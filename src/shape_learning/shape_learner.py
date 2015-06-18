@@ -80,6 +80,7 @@ class ShapeLearner:
 
         self.initialParamValue = settings.initialParamValue
         self.params = numpy.zeros((self.numPrincipleComponents, 1))
+        self.shape = self.shapeModeler.makeShape(self.params) # <--- now this is what matters (because of multi-stroke)
 
         for i in range(self.numPrincipleComponents):
             self.params[i][0] = -self.initialParamValue[i]
@@ -272,7 +273,8 @@ class ShapeLearner:
         return self.params
 
     def getLearnedShape(self):
-        return self.shapeModeler.makeShape(self.params), self.params
+        #return self.shapeModeler.makeShape(self.params), self.params
+        return self.shape, self.params
 
     def getParameterBounds(self):
         return self.bounds
@@ -313,7 +315,10 @@ class ShapeLearner:
         
         # learning :
         diff_params = params_demo - self.params
-        self.params += diff_params/2 #go towards the demonstrated shape
+        self.params += 0*diff_params/2 #go towards the demonstrated shape
+        #self.params = params_demo
+
+        self.shape = 0.5*(demo_shape+self.shape)
 
 
         #self.params[self.paramsToVary[0]-1] = params_demo[self.paramsToVary[0]-1] #ONLY USE FIRST PARAM
@@ -325,8 +330,9 @@ class ShapeLearner:
             bisect.insort(self.params_sorted, newParamValue)
             self.shapeToParamsMapping.append(self.params)
             #self.respondToFeedback(len(self.params_sorted)-3) # give feedback of most recent shape so bounds modify"""
-        return self.shapeModeler.makeShape(self.params), self.params, params_demo
-    
+        return demo_shape, self.params, params_demo
+        #return self.shapeModeler.makeShape(self.params), self.params, params_demo
+
     def respondToGoodDemonstration(self, shape):
         """
         will learn the demo only if it is close to the goal shape, the way it was drawn is important
@@ -395,6 +401,7 @@ class ShapeLearner:
         # learning, if good shape :
         diff_params = params_demo - self.params
         if response==2:
+            self.shape = 0.5*(self.shape+demo_shape)
             self.params += diff_params/2 #go towards the demonstrated shape
 
         #self.params[self.paramsToVary[0]-1] = params_demo[self.paramsToVary[0]-1] #ONLY USE FIRST PARAM
@@ -407,6 +414,7 @@ class ShapeLearner:
             self.shapeToParamsMapping.append(self.params)
             #self.respondToFeedback(len(self.params_sorted)-3) # give feedback of most recent shape so bounds modify"""
         return response, self.shapeModeler.makeShape(self.params), self.params, params_demo
+        #return response, self.shape, self.params, params_demo
     
     def respondToGoodDemonstration_modulo_phase(self, shape):
         """

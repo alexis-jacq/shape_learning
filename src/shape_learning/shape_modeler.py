@@ -270,7 +270,7 @@ class ShapeModeler:
         """
         if self.update_filenames:
             filename = self.update_filenames[0]
-            print('saving in'+filename)
+            #print('saving in'+filename)
             if not os.path.exists(filename):
                 raise RuntimeError("path to dataset"+filename+"not found")
             try:
@@ -315,7 +315,7 @@ class ShapeModeler:
         """
         if self.robot_filenames:
             filename = self.robot_filenames[0]
-            print('saving robot try in'+filename)
+            #print('saving robot try in'+filename)
             if not os.path.exists(filename):
                 raise RuntimeError("path to dataset"+filename+"not found")
             try:

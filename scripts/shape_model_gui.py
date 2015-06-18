@@ -97,7 +97,7 @@ if __name__ == "__main__":
         import inspect
         fileName = inspect.getsourcefile(ShapeModeler);
         installDirectory = fileName.split('/lib')[0];
-        datasetDirectory = installDirectory + '/share/shape_learning/letter_model_datasets/alexis_set_for_children';
+        datasetDirectory = installDirectory + '/share/shape_learning/letter_model_datasets/reference_letters';
     shapeModeler = prepareShapeModel(datasetDirectory, shape);
 
     #start gui
